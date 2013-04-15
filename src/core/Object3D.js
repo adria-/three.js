@@ -187,69 +187,80 @@ THREE.Object3D.prototype = {
 
 	}(),
 
-	add: function ( object ) {
+	add: function () {
 
-		if ( object === this ) {
+		for ( var i = 0, l = arguments.length; i < l; i ++ ) {
 
-			console.warn( 'THREE.Object3D.add: An object can\'t be added as a child of itself.' );
-			return;
+			var object = arguments[i];
 
-		}
+			if ( object === this ) {
 
-		if ( object instanceof THREE.Object3D ) {
-
-			if ( object.parent !== undefined ) {
-
-				object.parent.remove( object );
+				console.warn( 'THREE.Object3D.add: An object can\'t be added as a child of itself.' );
+				return;
 
 			}
-
-			object.parent = this;
-			this.children.push( object );
-
-			// add to scene
-
-			var scene = this;
-
-			while ( scene.parent !== undefined ) {
-
-				scene = scene.parent;
-
-			}
-
-			if ( scene !== undefined && scene instanceof THREE.Scene )  {
-
-				scene.__addObject( object );
-
+	
+			if ( object instanceof THREE.Object3D ) {
+	
+				if ( object.parent !== undefined ) {
+	
+					object.parent.remove( object );
+	
+				}
+	
+				object.parent = this;
+				this.children.push( object );
+	
+				// add to scene
+	
+				var scene = this;
+	
+				while ( scene.parent !== undefined ) {
+	
+					scene = scene.parent;
+	
+				}
+	
+				if ( scene !== undefined && scene instanceof THREE.Scene )  {
+	
+					scene.__addObject( object );
+	
+				}
+	
 			}
 
 		}
 
 	},
 
-	remove: function ( object ) {
+	remove: function () {
 
-		var index = this.children.indexOf( object );
+		for ( var i = 0, l = arguments.length; i < l; i ++ ) {
 
-		if ( index !== - 1 ) {
+			var object = arguments[i],
+			index = this.children.indexOf( object );
 
-			object.parent = undefined;
-			this.children.splice( index, 1 );
+			if ( index !== - 1 ) {
 
-			// remove from scene
+				object.parent = undefined;
+				this.children.splice( index, 1 );
 
-			var scene = this;
+				// remove from scene
 
-			while ( scene.parent !== undefined ) {
+				var scene = this;
 
-				scene = scene.parent;
+				while ( scene.parent !== undefined ) {
 
-			}
+					scene = scene.parent;
 
-			if ( scene !== undefined && scene instanceof THREE.Scene ) {
+				}
 
-				scene.__removeObject( object );
+				if ( scene !== undefined && scene instanceof THREE.Scene ) {
+	
+					scene.__removeObject( object );
 
+				}
+	
 			}
 
 		}
